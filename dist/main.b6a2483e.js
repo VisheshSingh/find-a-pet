@@ -229,12 +229,48 @@ var global = arguments[3];
 
   module.exports = fetchJsonp;
 });
+},{}],12:[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isValidZip = isValidZip;
+exports.showAlert = showAlert;
+// Validate ZIPcode
+function isValidZip(zip) {
+  return (/^\d{5}(-\d{4})?$/.test(zip)
+  );
+}
+
+// Display alert message
+function showAlert(message, className) {
+  // Create div
+  var div = document.createElement("div");
+  // Add Classes
+  div.className = "alert alert-" + className;
+  // Add Text
+  div.appendChild(document.createTextNode(message));
+
+  // Get container
+  var container = document.querySelector(".container");
+  // Get Form
+  var form = document.querySelector("#pet-form");
+  // Insert ALert
+  container.insertBefore(div, form);
+
+  setTimeout(function () {
+    return document.querySelector(".alert").remove();
+  }, 3000);
+}
 },{}],8:[function(require,module,exports) {
 "use strict";
 
 var _fetchJsonp = require("fetch-jsonp");
 
 var _fetchJsonp2 = _interopRequireDefault(_fetchJsonp);
+
+var _validate = require("./validate");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -249,6 +285,12 @@ function fetchAnimals(e) {
   //Get User Input
   var animal = document.querySelector("#animal").value;
   var zip = document.querySelector("#zip").value;
+
+  // Validate Zip
+  if (!(0, _validate.isValidZip)(zip)) {
+    (0, _validate.showAlert)("Please enter valid zip", "danger");
+    return;
+  }
 
   // Fetch Pets
   (0, _fetchJsonp2.default)("http://api.petfinder.com/pet.find?format=json&key=64719e072566097abd5e913c810e3364&animal=" + animal + "&location=" + zip + "&callback=callback", {
@@ -277,7 +319,7 @@ function showAnimals(pets) {
     results.appendChild(div);
   });
 }
-},{"fetch-jsonp":10}],9:[function(require,module,exports) {
+},{"fetch-jsonp":10,"./validate":12}],9:[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
